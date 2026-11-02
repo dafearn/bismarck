@@ -27,6 +27,8 @@
 				not = {
 					has_privateers_from = scope:actor
 				}
+				# bismarck: no privateers in the waters of a country we have an anti-raiding pact with
+				NOT = { bismarck_area_is_shielded_from_raider = { RAIDER = scope:actor } }
 			}
 		}
 	}
@@ -55,6 +57,8 @@
 			not = {
 				has_privateers_from = scope:actor
 			}
+			# bismarck: hide areas next to the ports of a country we have an anti-raiding pact with
+			NOT = { bismarck_area_is_shielded_from_raider = { RAIDER = scope:actor } }
 			any_adjacent_ports_to_area = {
 				or = {
 					has_owner = no

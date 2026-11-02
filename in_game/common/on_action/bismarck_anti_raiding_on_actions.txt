@@ -1,0 +1,14 @@
+﻿monthly_country_pulse = {
+	on_actions = {
+		bismarck_anti_raiding_monthly
+	}
+}
+
+bismarck_anti_raiding_monthly = {
+	trigger = {
+		bismarck_has_any_anti_raiding_pact = yes
+	}
+	effect = {
+		bismarck_anti_raiding_sweep = yes
+	}
+}

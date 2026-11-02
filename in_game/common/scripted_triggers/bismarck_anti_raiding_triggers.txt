@@ -1,0 +1,53 @@
+﻿# Anti-raiding pacts
+# A country that gives one of these relations promises not to run privateers in the receiver's waters.
+# In 1.4, privateers are also what slave-raid unprotected coastal locations, so blocking them stops
+# both piracy and coastal raiding.
+
+# Scope: country (the protected country)
+# RAIDER: the country that promised not to raid
+bismarck_is_shielded_from_raider = {
+	OR = {
+		receiving_scripted_relation = {
+			type = relation_type:bismarck_anti_raiding_pact
+			target = $RAIDER$
+		}
+		receiving_scripted_relation = {
+			type = relation_type:bismarck_enforced_anti_raiding_pact
+			target = $RAIDER$
+		}
+	}
+}
+
+# Scope: country (the raider)
+# PROTECTED: the country we promised not to raid
+bismarck_is_bound_not_to_raid = {
+	OR = {
+		giving_scripted_relation = {
+			type = relation_type:bismarck_anti_raiding_pact
+			target = $PROTECTED$
+		}
+		giving_scripted_relation = {
+			type = relation_type:bismarck_enforced_anti_raiding_pact
+			target = $PROTECTED$
+		}
+	}
+}
+
+# Scope: country (the protected country)
+bismarck_has_any_anti_raiding_pact = {
+	OR = {
+		receiving_scripted_relation_of_type = relation_type:bismarck_anti_raiding_pact
+		receiving_scripted_relation_of_type = relation_type:bismarck_enforced_anti_raiding_pact
+	}
+}
+
+# Scope: sea area
+# True if any port next to this area belongs to a country that RAIDER promised not to raid.
+bismarck_area_is_shielded_from_raider = {
+	any_adjacent_ports_to_area = {
+		has_owner = yes
+		owner = {
+			bismarck_is_shielded_from_raider = { RAIDER = $RAIDER$ }
+		}
+	}
+}

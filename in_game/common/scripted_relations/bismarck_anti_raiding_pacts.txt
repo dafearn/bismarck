@@ -1,0 +1,129 @@
+﻿# Anti-raiding pacts. Both are one way: the giver (first) promises not to run privateers in the
+# receiver's (second) waters. Privateers are also what raid coasts for slaves in 1.4, so this covers
+# piracy and coastal raiding. Enforcement lives in privateers.txt (hire_privateer) and the monthly
+# sweep in on_action/bismarck_anti_raiding_on_actions.txt.
+
+# Agreed through diplomacy between two players. Lasts until either side ends it or they go to war.
+bismarck_anti_raiding_pact = {
+	type = diplomacy
+	relation_type = oneway
+	break_on_war = yes
+	annulled_by_peace_treaty = yes
+	relation_type_for_ai = friendly
+	giving_color = rgb { 40 90 160 }
+	receiving_color = rgb { 70 140 210 }
+	category = {
+		offer = CATEGORY_FRIENDLY_ACTIONS
+		request = CATEGORY_FRIENDLY_ACTIONS
+		cancellation = CATEGORY_FRIENDLY_ACTIONS
+		break = CATEGORY_FRIENDLY_ACTIONS
+	}
+
+	# Player to player only. AI countries still have the vanilla Anti-Piracy Agreement.
+	visible = {
+		scope:actor = {
+			is_ai = no
+		}
+		scope:recipient = {
+			is_ai = no
+		}
+	}
+
+	# Offer: the actor promises not to raid the recipient, so the recipient needs a coast.
+	offer_visible = { always = yes }
+	offer_enabled = {
+		scope:recipient = {
+			has_ports = yes
+		}
+	}
+
+	# Request: the actor asks the recipient not to raid them, so the actor needs a coast.
+	request_visible = { always = yes }
+	request_enabled = {
+		scope:actor = {
+			has_ports = yes
+		}
+	}
+
+	# The country that made the promise can withdraw it.
+	cancel_visible = { always = yes }
+	cancel_enabled = { always = yes }
+
+	# The protected country can give up the protection.
+	break_visible = { always = yes }
+	break_enabled = { always = yes }
+
+	offer_effect = {
+		scope:recipient = {
+			bismarck_dismiss_raider_privateers = { RAIDER = scope:actor }
+		}
+	}
+
+	request_effect = {
+		scope:actor = {
+			bismarck_dismiss_raider_privateers = { RAIDER = scope:recipient }
+		}
+	}
+
+	# Only players can be on either side, so these are fallbacks.
+	wants_to_give = {
+		add = {
+			desc = "BASE"
+			value = 0
+		}
+	}
+	wants_to_receive = {
+		add = {
+			desc = "BASE"
+			value = 10
+		}
+	}
+	wants_to_keep = {
+		add = {
+			desc = "BASE"
+			value = 10
+		}
+	}
+}
+
+# Imposed in a peace deal (peace_treaties/bismarck_anti_raiding_treaty.txt).
+# Lasts as long as the truce between the two countries. The loser cannot cancel it.
+bismarck_enforced_anti_raiding_pact = {
+	type = diplomacy
+	relation_type = oneway
+	break_on_war = yes
+	relation_type_for_ai = hostile
+	giving_color = rgb { 120 40 40 }
+	receiving_color = rgb { 170 70 70 }
+	category = {
+		offer = CATEGORY_HOSTILE_ACTIONS
+		request = CATEGORY_HOSTILE_ACTIONS
+		cancellation = CATEGORY_HOSTILE_ACTIONS
+		break = CATEGORY_HOSTILE_ACTIONS
+	}
+
+	visible = { always = yes }
+
+	offer_visible = { always = no }
+	request_visible = { always = no }
+	cancel_visible = { always = no }
+
+	# The winner can let the loser off early.
+	break_visible = { always = yes }
+	break_enabled = { always = yes }
+
+	# Ends with the truce. The grace variable is set by the peace treaty so the relation
+	# isn't dropped before the truce from that peace has been added.
+	will_expire_trigger = {
+		NOT = { scope:first = { has_truce_with = scope:second } }
+		NOT = { scope:second = { has_truce_with = scope:first } }
+		NOT = { scope:second = { has_variable = bismarck_anti_raiding_truce_grace } }
+	}
+
+	wants_to_keep = {
+		add = {
+			desc = "BASE"
+			value = 10
+		}
+	}
+}
