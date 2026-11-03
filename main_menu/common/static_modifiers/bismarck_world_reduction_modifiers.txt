@@ -1,0 +1,10 @@
+﻿# Put on land cleared by the Wipe level of a bismarck_wr_* game rule.
+bismarck_wr_location_disabled = {
+	game_data = {
+		category = location
+	}
+	local_population_capacity = -1000
+	cap_maximum_population_growth_at_zero = yes
+	local_migration_attraction = -100
+	local_monthly_prosperity = -10
+}

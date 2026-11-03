@@ -1,0 +1,261 @@
+﻿# Bismarck world reduction.
+# Adapted from Faster Universalis (GPL-3.0, github.com/conner-olsen/eu5-faster-universalis),
+# without its Community Mod Framework settings. The host picks a level per block of regions with
+# the bismarck_wr_* game rules, and bismarck_wr_apply runs once after country selection.
+#
+# Levels:
+#   keep            nothing
+#   remove_nations  strip land from every country (units destroyed, buildings removed). Pops stay.
+#   simplify        remove_nations + convert each region's pops to its largest culture and religion
+#   wipe            remove_nations + leave one tiny pop per location + a modifier that stops pops growing.
+#                   1.4 has no scriptable colonial charter action, so charters can't be blocked outright.
+
+# Scope: none. Called from on_action/bismarck_world_reduction_on_actions.txt.
+bismarck_wr_apply = {
+	if = {
+		limit = { NOT = { has_global_variable = bismarck_wr_done } }
+		set_global_variable = bismarck_wr_done
+		# Japan
+		region:japan_region = { bismarck_wr_apply_region = { BLOCK = japan } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_japan_keep } }
+			set_global_variable = bismarck_wr_japan_removed
+		}
+		# Korea
+		region:korea_region = { bismarck_wr_apply_region = { BLOCK = korea } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_korea_keep } }
+			set_global_variable = bismarck_wr_korea_removed
+		}
+		# China
+		region:north_china_region = { bismarck_wr_apply_region = { BLOCK = china } }
+		region:east_china_region = { bismarck_wr_apply_region = { BLOCK = china } }
+		region:south_china_region = { bismarck_wr_apply_region = { BLOCK = china } }
+		region:west_china_region = { bismarck_wr_apply_region = { BLOCK = china } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_china_keep } }
+			set_global_variable = bismarck_wr_china_removed
+		}
+		# Inner Asia (Manchuria, Mongolia, Tibet, Xinjiang)
+		region:manchuria_region = { bismarck_wr_apply_region = { BLOCK = inner_asia } }
+		region:mongolia_region = { bismarck_wr_apply_region = { BLOCK = inner_asia } }
+		region:tibet_region = { bismarck_wr_apply_region = { BLOCK = inner_asia } }
+		region:xinjiang_region = { bismarck_wr_apply_region = { BLOCK = inner_asia } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_inner_asia_keep } }
+			set_global_variable = bismarck_wr_inner_asia_removed
+		}
+		# Siberia
+		region:west_siberia_region = { bismarck_wr_apply_region = { BLOCK = siberia } }
+		region:east_siberia_region = { bismarck_wr_apply_region = { BLOCK = siberia } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_siberia_keep } }
+			set_global_variable = bismarck_wr_siberia_removed
+		}
+		# South Asia
+		region:hindustan_region = { bismarck_wr_apply_region = { BLOCK = south_asia } }
+		region:bengal_region = { bismarck_wr_apply_region = { BLOCK = south_asia } }
+		region:central_india_region = { bismarck_wr_apply_region = { BLOCK = south_asia } }
+		region:western_india_region = { bismarck_wr_apply_region = { BLOCK = south_asia } }
+		region:deccan_region = { bismarck_wr_apply_region = { BLOCK = south_asia } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_south_asia_keep } }
+			set_global_variable = bismarck_wr_south_asia_removed
+		}
+		# Southeast Asia
+		region:indochina_region = { bismarck_wr_apply_region = { BLOCK = southeast_asia } }
+		region:indonesia_region = { bismarck_wr_apply_region = { BLOCK = southeast_asia } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_southeast_asia_keep } }
+			set_global_variable = bismarck_wr_southeast_asia_removed
+		}
+		# South America
+		region:colombia_region = { bismarck_wr_apply_region = { BLOCK = south_america } }
+		region:brazil_region = { bismarck_wr_apply_region = { BLOCK = south_america } }
+		region:andes_region = { bismarck_wr_apply_region = { BLOCK = south_america } }
+		region:chaco_region = { bismarck_wr_apply_region = { BLOCK = south_america } }
+		region:la_plata_region = { bismarck_wr_apply_region = { BLOCK = south_america } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_south_america_keep } }
+			set_global_variable = bismarck_wr_south_america_removed
+		}
+		# Oceania
+		region:australia_region = { bismarck_wr_apply_region = { BLOCK = oceania } }
+		region:new_zealand_region = { bismarck_wr_apply_region = { BLOCK = oceania } }
+		region:polynesia_region = { bismarck_wr_apply_region = { BLOCK = oceania } }
+		region:micronesia_region = { bismarck_wr_apply_region = { BLOCK = oceania } }
+		region:melanesia_region = { bismarck_wr_apply_region = { BLOCK = oceania } }
+		if = {
+			limit = { NOT = { has_game_rule = bismarck_wr_oceania_keep } }
+			set_global_variable = bismarck_wr_oceania_removed
+		}
+	}
+}
+
+# Scope: region. BLOCK: the game rule block this region belongs to (japan, china, ...).
+bismarck_wr_apply_region = {
+	if = {
+		limit = { has_game_rule = bismarck_wr_$BLOCK$_remove_nations }
+		bismarck_wr_remove_region_countries = yes
+	}
+	else_if = {
+		limit = { has_game_rule = bismarck_wr_$BLOCK$_simplify }
+		bismarck_wr_remove_region_countries = yes
+		bismarck_wr_merge_region_pops = yes
+	}
+	else_if = {
+		limit = { has_game_rule = bismarck_wr_$BLOCK$_wipe }
+		bismarck_wr_remove_region_countries = yes
+		bismarck_wr_replace_region_pops = yes
+		bismarck_wr_block_region_colonization = yes
+	}
+}
+
+# Scope: region.
+bismarck_wr_remove_region_countries = {
+	every_location_in_region = {
+		limit = {
+			is_land = yes
+			bismarck_wr_is_protected_location = no
+		}
+		bismarck_wr_strip_location = yes
+	}
+}
+
+# Scope: location.
+bismarck_wr_strip_location = {
+	every_unit_in_location = {
+		destroy_unit = yes
+	}
+	every_buildings_in_location = {
+		change_building_level = -100
+	}
+	if = {
+		limit = { has_owner = yes }
+		owner = {
+			abandon_location = prev
+		}
+	}
+}
+
+# Scope: region. Every unprotected pop takes the region's largest culture and religion, so they merge.
+bismarck_wr_merge_region_pops = {
+	bismarck_wr_find_region_majority = yes
+	if = {
+		limit = { local_var:bismarck_wr_culture_best > 0 }
+		every_location_in_region = {
+			limit = {
+				is_land = yes
+				bismarck_wr_is_protected_location = no
+			}
+			every_pop = {
+				change_pop_culture = scope:bismarck_wr_culture
+				change_pop_religion = scope:bismarck_wr_religion
+			}
+			force_refresh_culture_and_religion = this
+		}
+	}
+}
+
+# Scope: region. Leaves each unprotected location an undeveloped rural settlement of 10 people.
+bismarck_wr_replace_region_pops = {
+	bismarck_wr_find_region_majority = yes
+	if = {
+		limit = { local_var:bismarck_wr_culture_best > 0 }
+		every_location_in_region = {
+			limit = {
+				is_land = yes
+				bismarck_wr_is_protected_location = no
+			}
+			every_pop = {
+				destroy_pop = this
+			}
+			add_pop = {
+				culture = scope:bismarck_wr_culture
+				religion = scope:bismarck_wr_religion
+				type = pop_type:peasants
+				size = 0.01
+			}
+			force_refresh_culture_and_religion = this
+			change_development = -100
+			change_location_rank = location_rank:rural_settlement
+		}
+	}
+}
+
+# Scope: region. The modifier keeps pops from growing, so colonies there go nowhere.
+bismarck_wr_block_region_colonization = {
+	every_location_in_region = {
+		limit = {
+			is_land = yes
+			bismarck_wr_is_protected_location = no
+			NOT = { has_location_modifier = bismarck_wr_location_disabled }
+		}
+		add_location_modifier = {
+			modifier = bismarck_wr_location_disabled
+			years = -1
+			mode = add
+		}
+	}
+}
+
+# Scope: region. Leaves the largest culture and religion by population in scope:bismarck_wr_culture
+# and scope:bismarck_wr_religion. A region with no pops leaves local_var:bismarck_wr_culture_best at 0.
+bismarck_wr_find_region_majority = {
+	clear_local_variable_map = bismarck_wr_culture_pop
+	clear_local_variable_map = bismarck_wr_religion_pop
+	set_local_variable = { name = bismarck_wr_culture_best value = 0 }
+	set_local_variable = { name = bismarck_wr_religion_best value = 0 }
+	every_location_in_region = {
+		every_pop = {
+			bismarck_wr_tally_pop_culture = yes
+			bismarck_wr_tally_pop_religion = yes
+		}
+	}
+}
+
+# Scope: pop.
+bismarck_wr_tally_pop_culture = {
+	culture = {
+		save_scope_as = bismarck_wr_tally_key
+	}
+	if = {
+		limit = { is_key_in_local_variable_map = { name = bismarck_wr_culture_pop target = scope:bismarck_wr_tally_key } }
+		set_local_variable = { name = bismarck_wr_tally value = "local_variable_map(bismarck_wr_culture_pop|scope:bismarck_wr_tally_key)" }
+	}
+	else = {
+		set_local_variable = { name = bismarck_wr_tally value = 0 }
+	}
+	change_local_variable = { name = bismarck_wr_tally add = pop_size }
+	add_to_local_variable_map = { name = bismarck_wr_culture_pop key = scope:bismarck_wr_tally_key value = local_var:bismarck_wr_tally }
+	if = {
+		limit = { local_var:bismarck_wr_tally > local_var:bismarck_wr_culture_best }
+		set_local_variable = { name = bismarck_wr_culture_best value = local_var:bismarck_wr_tally }
+		culture = {
+			save_scope_as = bismarck_wr_culture
+		}
+	}
+}
+
+# Scope: pop.
+bismarck_wr_tally_pop_religion = {
+	religion = {
+		save_scope_as = bismarck_wr_tally_key
+	}
+	if = {
+		limit = { is_key_in_local_variable_map = { name = bismarck_wr_religion_pop target = scope:bismarck_wr_tally_key } }
+		set_local_variable = { name = bismarck_wr_tally value = "local_variable_map(bismarck_wr_religion_pop|scope:bismarck_wr_tally_key)" }
+	}
+	else = {
+		set_local_variable = { name = bismarck_wr_tally value = 0 }
+	}
+	change_local_variable = { name = bismarck_wr_tally add = pop_size }
+	add_to_local_variable_map = { name = bismarck_wr_religion_pop key = scope:bismarck_wr_tally_key value = local_var:bismarck_wr_tally }
+	if = {
+		limit = { local_var:bismarck_wr_tally > local_var:bismarck_wr_religion_best }
+		set_local_variable = { name = bismarck_wr_religion_best value = local_var:bismarck_wr_tally }
+		religion = {
+			save_scope_as = bismarck_wr_religion
+		}
+	}
+}

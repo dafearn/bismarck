@@ -1,0 +1,14 @@
+﻿# Scope: location
+# Land we never touch: owned by a player, or by a subject of a player.
+bismarck_wr_is_protected_location = {
+	has_owner = yes
+	owner = {
+		OR = {
+			is_ai = no
+			AND = {
+				is_subject = yes
+				overlord ?= { is_ai = no }
+			}
+		}
+	}
+}
