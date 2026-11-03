@@ -1,0 +1,70 @@
+﻿# Peace treaty: the loser must keep its privateers out of the winner's waters until the truce ends.
+bismarck_anti_raiding_treaty = {
+	cost = {
+		add = {
+			desc = "DIPLOREASON_BASE"
+			value = 10
+		}
+	}
+
+	potential = {
+		scope:winner = {
+			has_ports = yes
+		}
+		NOT = {
+			scope:loser = {
+				giving_scripted_relation = {
+					type = relation_type:bismarck_enforced_anti_raiding_pact
+					target = scope:winner
+				}
+			}
+		}
+	}
+
+	allow = {
+	}
+
+	effect = {
+		create_relation = {
+			first = scope:loser
+			second = scope:winner
+			type = relation_type:bismarck_enforced_anti_raiding_pact
+		}
+		scope:winner = {
+			set_variable = {
+				name = bismarck_anti_raiding_truce_grace
+				days = 30
+			}
+			bismarck_dismiss_raider_privateers = { RAIDER = scope:loser }
+		}
+	}
+
+	ai_desire = {
+		if = {
+			limit = {
+				scope:winner = {
+					any_port_in_country = {
+						sea_zone = {
+							has_privateers_from = scope:loser
+						}
+					}
+				}
+			}
+			add = {
+				desc = "CUSTOM_SEARCH_FILTER_AREA_HAS_PRIVATEERS_NAME"
+				value = 10
+			}
+		}
+		if = {
+			limit = {
+				scope:loser = {
+					modifier:can_hire_privateers = yes
+				}
+			}
+			add = {
+				desc = "BASE"
+				value = 3
+			}
+		}
+	}
+}

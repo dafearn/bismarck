@@ -1,0 +1,33 @@
+﻿# Scope: country (the protected country)
+# Dismisses RAIDER's privateers from every sea area next to our ports.
+# Same pattern as the vanilla anti_piracy_agreement request_effect.
+bismarck_dismiss_raider_privateers = {
+	every_port_in_country = {
+		limit = {
+			sea_zone = {
+				has_privateers_from = $RAIDER$
+			}
+		}
+		sea_zone = {
+			area = {
+				dismiss_privateer = $RAIDER$
+			}
+		}
+	}
+}
+
+# Scope: country (the protected country)
+# Clears out privateers from every country bound by a pact with us.
+# Catches privateers that got in some other way than the hire action.
+bismarck_anti_raiding_sweep = {
+	save_scope_as = bismarck_protected
+	every_country = {
+		limit = {
+			bismarck_is_bound_not_to_raid = { PROTECTED = scope:bismarck_protected }
+		}
+		save_scope_as = bismarck_raider
+		scope:bismarck_protected = {
+			bismarck_dismiss_raider_privateers = { RAIDER = scope:bismarck_raider }
+		}
+	}
+}
