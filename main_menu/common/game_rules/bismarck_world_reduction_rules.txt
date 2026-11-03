@@ -1,0 +1,146 @@
+﻿# Bismarck world reduction. The host picks these in the lobby; they run once after country selection.
+# See in_game/common/scripted_effects/bismarck_world_reduction_effects.txt.
+
+bismarck_wr_japan = {
+	default = bismarck_wr_japan_keep
+	bismarck_wr_japan_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_japan_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_japan_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_japan_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_korea = {
+	default = bismarck_wr_korea_simplify
+	bismarck_wr_korea_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_korea_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_korea_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_korea_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_china = {
+	default = bismarck_wr_china_simplify
+	bismarck_wr_china_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_china_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_china_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_china_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_inner_asia = {
+	default = bismarck_wr_inner_asia_simplify
+	bismarck_wr_inner_asia_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_inner_asia_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_inner_asia_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_inner_asia_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_siberia = {
+	default = bismarck_wr_siberia_keep
+	bismarck_wr_siberia_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_siberia_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_siberia_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_siberia_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_south_asia = {
+	default = bismarck_wr_south_asia_keep
+	bismarck_wr_south_asia_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_asia_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_asia_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_asia_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_southeast_asia = {
+	default = bismarck_wr_southeast_asia_keep
+	bismarck_wr_southeast_asia_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_southeast_asia_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_southeast_asia_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_southeast_asia_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_south_america = {
+	default = bismarck_wr_south_america_keep
+	bismarck_wr_south_america_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_america_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_america_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_south_america_wipe = {
+		flag = multiplayer_rule
+	}
+}
+
+bismarck_wr_oceania = {
+	default = bismarck_wr_oceania_keep
+	bismarck_wr_oceania_keep = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_oceania_remove_nations = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_oceania_simplify = {
+		flag = multiplayer_rule
+	}
+	bismarck_wr_oceania_wipe = {
+		flag = multiplayer_rule
+	}
+}
